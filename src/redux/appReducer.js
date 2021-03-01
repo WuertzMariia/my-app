@@ -22,13 +22,13 @@ export let appReducer = (state = initialState, action) => {
 const initial_status = () => ({type: INITILIZATION_SUCCESFULL});
 
 export const initialization_App = () => {
-    debugger;
+
     return (dispatch) => {
         let promise = dispatch(singInProcessCheck());
         Promise.all([promise])
-       .then(() => {
-            dispatch(initial_status());
-            }
-        );
+            .then(() => {
+                    dispatch(initial_status());
+                }
+            );
     }
 }

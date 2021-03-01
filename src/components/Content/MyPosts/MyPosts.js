@@ -4,8 +4,7 @@ import MyPostsFieldFormContainer from "./MyPostsFieldForm";
 import Post from './Post/Post'
 
 
-
-const MyPosts = (props) => {
+const MyPosts = React.memo(props => {
 
     // let postareaChange = (e) => {
 
@@ -13,11 +12,11 @@ const MyPosts = (props) => {
     //     props.updatetextarea(new_value);
     // }
 
-   // let addPost = (values) => {
+    // let addPost = (values) => {
     //   props.updateaddPost(values.new_post);
     // }
-
-    let postdata = props.profilePage.posts.map(p => <Post message={p.post} />)
+    console.log("render");
+    let postdata = props.profilePage.posts.map(p => <Post message={p.post}/>)
     return <div className={c.content}>
 
         <div><h3>My Posts</h3></div>
@@ -29,6 +28,6 @@ const MyPosts = (props) => {
         {postdata}
 
     </div>
-}
+});
 
 export default MyPosts;

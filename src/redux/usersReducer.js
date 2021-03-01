@@ -1,4 +1,4 @@
-import { usersApi } from "../api/api";
+import {usersApi} from "../api/api";
 
 const FOLLOW = "follow";
 const UNFOLLOW = "unfollow";
@@ -19,53 +19,42 @@ let initialState = {
 
 
 let usersReducer = (state = initialState, action) => {
-
     switch (action.type) {
-
-        case FOLLOW:
-            {  
-                return  {
-                    ...state,
-                    users: state.users.map(u => {
-                       
-                        if (u.id=== action.userId) {
-                           
-                            return { ...u, followed: true }
-                        }
-                        
-                        return u;
-                    })
-                }
-
-               
-            };
-        case UNFOLLOW:
-            {
-                return  {
-                    ...state,
-                    users: state.users.map(u => {
-                        if (u.id === action.userId) {
-                            return { ...u, followed: false }
-                        }
-                        return u;
-                    })
-                }
-
-              
-            };
+        case FOLLOW: {
+            return {
+                ...state,
+                users: state.users.map(u => {
+                    if (u.id === action.userId) {
+                        return {...u, followed: true}
+                    }
+                    return u;
+                })
+            }
+        }
+            ;
+        case UNFOLLOW: {
+            return {
+                ...state,
+                users: state.users.map(u => {
+                    if (u.id === action.userId) {
+                        return {...u, followed: false}
+                    }
+                    return u;
+                })
+            }
+        }
+            ;
         case SETCURRENTPAGE:
             return {
                 ...state,
                 currentPage: action.currentPage
             };
         case SETUSERS:
-
             return {
                 ...state,
                 users: action.users
             };
         case SETTOTALPAGESCOUNT:
-
             return {
                 ...state,
                 totalUsersCount: action.totalUsersCount
@@ -84,64 +73,63 @@ let usersReducer = (state = initialState, action) => {
                     [...state.subscriptionProcessed.filter(id => id !== action.id)]
             }
         }
-
-        default: return state;
+        default:
+            return state;
     }
-
 }
 
 export const follow = (userId) => {
-    return ({ type: FOLLOW, userId }) };
-export const unfollow = (userId) => ({ type: UNFOLLOW, userId });
-export const setUsers = (users) => ({ type: SETUSERS, users });
-export const toggleIsLoading = (isloading) => ({ type: TOGGLEISLOADING, isloading });
-export const subscriptionIsBeingProcessed = (being_processed, id) => ({ type: SUBSCRIPTIONPROCESSED, being_processed, id });
-
-export const setCurrentPageUsers = (currentPage) => ({ type: SETCURRENTPAGE, currentPage });
-export const setTotalUsersCount = (totalUsersCount) => ({ type: SETTOTALPAGESCOUNT, totalUsersCount });
-
-
+    return ({type: FOLLOW, userId})
+};
+export const unfollow = (userId) => ({type: UNFOLLOW, userId});
+export const setUsers = (users) => ({type: SETUSERS, users});
+export const toggleIsLoading = (isloading) => ({type: TOGGLEISLOADING, isloading});
+export const subscriptionIsBeingProcessed = (being_processed, id) => ({
+    type: SUBSCRIPTIONPROCESSED,
+    being_processed,
+    id
+});
+export const setCurrentPageUsers = (currentPage) => ({type: SETCURRENTPAGE, currentPage});
+export const setTotalUsersCount = (totalUsersCount) => ({type: SETTOTALPAGESCOUNT, totalUsersCount});
 
 export const getUsers = (currentPage, pageSize) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(toggleIsLoading(true));
-        
-        usersApi.getUsers(currentPage, pageSize).then((data) => {
+
+       let response = await usersApi.getUsers(currentPage, pageSize)
             dispatch(toggleIsLoading(false));
-            dispatch(setUsers(data.items));
+            dispatch(setUsers(response.items));
             dispatch(setCurrentPageUsers(currentPage));
-            dispatch(setTotalUsersCount(data.totalCount));
-        });
+            dispatch(setTotalUsersCount(response.totalCount));
+
     }
 }
 
 export const unsubscribe = (userID) => {
+    return async (dispatch) => {
+        dispatch(subscriptionIsBeingProcessed(true, userID));
+        let response = await usersApi.deleteSubscription(userID)
+            if (response === 0) {
 
-    return (dispatch) => {
- 
-    dispatch(subscriptionIsBeingProcessed(true, userID));
-    usersApi.deleteSubscription(userID).then((resultCode) => {
-        if (resultCode === 0) {
-            
-            dispatch(unfollow(userID));
-        }
-       
-        dispatch(subscriptionIsBeingProcessed(false, userID));
-    });
-}}
+                dispatch(unfollow(userID));
+            }
+
+            dispatch(subscriptionIsBeingProcessed(false, userID));
+
+    }
+}
 
 export const subscribe = (userID) => {
 
-    return (dispatch) => {
- 
-    dispatch(subscriptionIsBeingProcessed(true, userID));
-    usersApi.getSubscription(userID).then((resultCode) => {
-        if (resultCode === 0) {
-      
-            dispatch(follow(userID));
-        }
-    });  
-    dispatch(subscriptionIsBeingProcessed(false, userID));
-}}
+    return async (dispatch) => {
+        dispatch(subscriptionIsBeingProcessed(true, userID));
+        let response = await usersApi.getSubscription(userID)
+            if (response === 0) {
+
+                dispatch(follow(userID));
+            }
+        dispatch(subscriptionIsBeingProcessed(false, userID));
+    }
+}
 
 export default usersReducer; 
