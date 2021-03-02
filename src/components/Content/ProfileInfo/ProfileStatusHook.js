@@ -6,7 +6,7 @@ const ProfileStatusWithHook = (props) => {
  let [editMode, setEditMode] = useState(false);
  let [status, setStatus] = useState(props.status);
 
- useEffect( ()=> {
+ useEffect( ()=> {   // executed after the component did mount. to check if props.status === status in state
      setStatus(props.status);
  }, [props.status]);
  

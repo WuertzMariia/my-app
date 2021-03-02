@@ -20,6 +20,7 @@ const MyPosts = React.memo(props => {
     return <div className={c.content}>
 
         <div><h3>My Posts</h3></div>
+
         <MyPostsFieldFormContainer/>
         {/* <textarea  onChange = {postareaChange} placeholder="Enter your new post here" value={props.profilePage.newposttext}></textarea>
 
