@@ -21,15 +21,12 @@ const ProfileStatusWithHook = (props) => {
 
     let handleKey = (e) =>  {
         if(e.charCode === 13 || e.keyCode === 13) {
-
             deactivateEditMode();
         }
     }
     let updateInputArea =(e) => {
-
        setStatus(e.target.value)
     }
-
 
    {
        return( <div className={c.main}>

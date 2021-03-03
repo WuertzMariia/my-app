@@ -1,4 +1,5 @@
 import {usersApi, profileAPI} from "../api/api";
+import React from "react";
 
 const post_textarea_changed = "post_textarea_changed";
 const add_post = "add_post";
@@ -7,6 +8,8 @@ const TOGGLE_LOADING = "page_is_loading";
 const UPDATE_USER_STATUS = "user_status_update";
 const SET_USER_STATUS = "set_user_status"
 const DELETE_POST = "delete_post";
+const SET_PROFILE_PHOTO = "set_new_profile_photo";
+const SET_PROFILE_DATA = "set_full_profile_data";
 let initialState = {
 
     posts: [
@@ -16,7 +19,6 @@ let initialState = {
         {post: "i am fine", id: 4},
         {post: "i am fine", id: 5}
     ],
-    // newposttext:"",
     profile: null,
     isFetching: false,
     status: 'My dream is to become a good Frontend Developer'
@@ -24,18 +26,11 @@ let initialState = {
 
 let profileReducer = (state = initialState, action) => {
     switch (action.type) {
-        /*case post_textarea_changed: {
-            return {
-                ...state,
-                newposttext : action.newPostData
-            }
-        };*/
+
         case add_post : {
 
-//  let newmessbode = state.newposttext; 
             return {
                 ...state,
-                // newposttext: "",
                 posts: [...state.posts, {post: action.new_post, id: 6}]
             }
         }
@@ -55,6 +50,14 @@ let profileReducer = (state = initialState, action) => {
             }
         }
             ;
+        case SET_PROFILE_PHOTO: {
+            debugger;
+            return {
+                ...state,
+                profile: {...state.profile, photos: action.file}
+
+            }
+        }
         case TOGGLE_LOADING: {
             return {
                 ...state,
@@ -70,6 +73,7 @@ let profileReducer = (state = initialState, action) => {
         }
             ;
         case SET_USER_STATUS: {
+
             return {
                 ...state,
                 status: action.status
@@ -80,17 +84,17 @@ let profileReducer = (state = initialState, action) => {
     }
 }
 
-// export const actioncreatorPostTextareaChanged = (new_value) => ({ type: post_textarea_changed, newPostData: new_value });
 export const actioncreatorAddPost = (new_post) => ({type: add_post, new_post});
 export const setUserProfile = (profile) => ({type: SET_USER_PROFILE, profile});
 export const toggleIsLoading = (isLoading) => ({type: TOGGLE_LOADING, isLoading});
 export const deletePost = (id) => ({type: DELETE_POST, id});
 const updatingUserStatus = (status) => ({type: UPDATE_USER_STATUS, status});
 const setUserStatus = (status) => ({type: SET_USER_STATUS, status});
-
+const savePhotoSuccess = (file) => ({type: SET_PROFILE_PHOTO, file})
+const setProfileDataSuccess = (data) => ({type: SET_PROFILE_DATA, data});
 export const getCurrentUserStatus = (userId) => {
     return async (dispatch) => {
-        let response = await profileAPI.getUserStatus(userId);
+        const response = await profileAPI.getUserStatus(userId);
         dispatch(setUserStatus(response));
 
     }
@@ -99,8 +103,8 @@ export const getCurrentUserStatus = (userId) => {
 export const getUserProfile = (userId) => {
     return async (dispatch) => {
         dispatch(toggleIsLoading(true));
-        let response = await usersApi.getUserProfile(userId)
-
+        const response = await usersApi.getUserProfile(userId)
+debugger;
         dispatch(toggleIsLoading(false));
         dispatch(setUserProfile(response));
 
@@ -109,7 +113,7 @@ export const getUserProfile = (userId) => {
 
 export const updateUserStatus = (status) => {
     return async (dispatch) => {
-        let response = await profileAPI.updateUserStatus(status)
+        const response = await profileAPI.updateUserStatus(status)
         if (response.resultCode === 0) {
             dispatch(updatingUserStatus(status));
         }
@@ -120,6 +124,27 @@ export const updateUserStatus = (status) => {
 export const addNewPost = (values) => {
     return (dispatch) => {
         dispatch(actioncreatorAddPost(values));
+    }
+}
+
+export const savePhoto = (file) => {
+    return async (dispatch) => {
+        const response = await profileAPI.savePhoto(file);
+        if (response.data.resultCode === 0) {
+            dispatch(savePhotoSuccess(response.data.data.photos));
+        }
+    }
+}
+
+export const setProfileData = (values) => {
+    return async (dispatch, getState) => {
+        const userId = getState().auth.data.userId;
+        const response = await profileAPI.setProfData(values);
+        debugger;
+        if (response.data.resultCode === 0) {
+
+            dispatch(getUserProfile(userId));
+        }
     }
 }
 

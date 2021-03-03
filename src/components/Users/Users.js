@@ -2,6 +2,8 @@ import React from "react";
 import s from './Users.module.css';
 import userPhoto from '../../assets/images/user.png';
 import { NavLink } from "react-router-dom";
+import Paginator from "./Paginator";
+import PaginatorVersionTwo from "./PaginatorVersionTwo";
 
 const Users = (props) => {
     let pages = Math.ceil(props.totalUsersCount / props.pageSize);
@@ -41,22 +43,14 @@ const Users = (props) => {
 
                 </div>)}
             </div>
+
             <div className={s.button_style}>
-
-                {/* 
-                   { pagesArray.map(p => {
-                         return  <button type="button" onClick={(event) => {this.onBtnPageClick(p)}} className={p === this.props.currentPage && s.selected} >{p}</button>
-                        
-                    })} */}
-                {props.currentPage <=1 ? null :  <button type="button" onClick={(event) => { props.onBtnPageClick(props.currentPage - 1) }} className={(props.currentPage - 1) === props.currentPage && s.selected} >{props.currentPage - 1}</button> }
-
-                <button type="button" onClick={(event) => { props.onBtnPageClick(props.currentPage) }} className={s.selected} >{props.currentPage}</button>
-                <button type="button" onClick={(event) => { props.onBtnPageClick(props.currentPage + 1) }} className={(props.currentPage + 1) === props.currentPage && s.selected} >{props.currentPage + 1}</button>
-
-                <button type="button" onClick={(event) => { props.onBtnPageClick(pagesArray[pagesArray.length - 1]) }} className={(pagesArray[pagesArray.length - 1]) === props.currentPage && s.selected} >
-
-                    <i className="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                <Paginator totalUsersCount={props.totalUsersCount} pageSize={props.pageSize} onBtnPageClick={props.onBtnPageClick}
+                           currentPage={props.currentPage} />
             </div>
+           {/* <div className={s.button_style}>
+                <PaginatorVersionTwo totalUsersCount={props.totalUsersCount} pageSize={props.pageSize} onBtnPageClick={props.onBtnPageClick}
+                                     currentPage={props.currentPage}/></div>*/}
         </div>
     )
 }
