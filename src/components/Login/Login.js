@@ -61,6 +61,19 @@ export const LoginForm = (props) => {
                             />{' '}
                             remember me
                         </label>
+                        {!!props.captchaURL && <img className={c.captcha} src={props.captchaURL}/>}
+                        {!!props.captchaURL &&
+                        <Field name="captcha">
+                            {({input, meta}) => (
+                                <div>
+                                    <label>Please enter the captcha code</label>
+                                    {meta.error && meta.touched && <span>{meta.error}</span>}
+                                    <input {...input} type="text" placeholder=""/>
+
+                                </div>
+                            )}
+                        </Field>}
+
                         <input name={"submit"} type={"submit"} value={"submit"}/>
                     </div>
                 </form>
@@ -70,6 +83,7 @@ export const LoginForm = (props) => {
 }
 
 const Login = (props) => {
+    debugger;
     let onSubmitForm = (values) => {
         props.singInLogin(values);
     }
@@ -78,14 +92,15 @@ const Login = (props) => {
     }
     return (
         <div>
-            <LoginForm onSubmitForm={onSubmitForm} login_failed={props.login_failed}/>
+            <LoginForm captchaURL={props.captchaURL} onSubmitForm={onSubmitForm} login_failed={props.login_failed}/>
         </div>
     )
 }
 
 let mapStateToProps = (state) => ({
     isAuth: state.auth.data.isAuth,
-    login_failed: state.auth.login_failed
+    login_failed: state.auth.login_failed,
+    captchaURL: state.auth.captchaURL
 })
 
-export default connect(mapStateToProps, {singInLogin})(Login); 
+export default connect(mapStateToProps, {singInLogin})(Login);

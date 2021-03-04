@@ -48,6 +48,12 @@ span {
 
 }
 
+.captcha {
+    width: 150px;
+    border-radius: 0;
+    margin: 20px;
+}
+
 #custom_checkbox+label:before {
     content: "";
     display: inline-block;
