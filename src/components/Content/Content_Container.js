@@ -9,32 +9,30 @@ import {savePhoto, setProfileData} from "../../redux/profileReducer";
 
 
 class Content_Container extends React.Component {
-refreshProfile () {
-
-    let userId = this.props.match.params.userId;
-    if (!userId && this.props.isAuth) {
-        userId = this.props.authorized_userId;
+    refreshProfile() {
+        let userId = this.props.match.params.userId;
+        if (!userId && this.props.isAuth) {
+            userId = this.props.authorized_userId;
+        }
+        this.props.getUserProfile(userId);
+        this.props.getCurrentUserStatus(userId);
     }
-    this.props.getUserProfile(userId);
-    this.props.getCurrentUserStatus(userId);
-}
+
     componentDidMount() {
-this.refreshProfile();
+        this.refreshProfile();
     }
 
-     componentDidUpdate (prevProps, prevState,snapshot) {
-
-    if(prevProps.match.params.userId != this.props.match.params.userId) {
-        this.refreshProfile();alert("refreshed");
-    }
-
-
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.match.params.userId != this.props.match.params.userId) {
+            this.refreshProfile();
+        }
     }
 
     render() {
 
         return (<div>
-            <Content userId={this.props.userId} savePhoto={this.props.savePhoto}{...this.props} isOwner={!this.props.match.params.userId} profile={this.props.profile} status={this.props.status}
+            <Content userId={this.props.userId} savePhoto={this.props.savePhoto}{...this.props}
+                     isOwner={!this.props.match.params.userId} profile={this.props.profile} status={this.props.status}
                      updateUserStatus={this.props.updateUserStatus}/>
         </div>)
     }
@@ -48,11 +46,13 @@ let mapStateToProps = (state) => ({
     userId: state.auth.data.userId
 });
 
-export default compose(connect(mapStateToProps, {setProfileData, savePhoto, getUserProfile, updateUserStatus, getCurrentUserStatus}),
+export default compose(connect(mapStateToProps, {
+        setProfileData,
+        savePhoto,
+        getUserProfile,
+        updateUserStatus,
+        getCurrentUserStatus
+    }),
     withRouter,
     withAuthRedirectComponent)
 (Content_Container)
-
-//  let authorizedComponent = withAuthRedirectComponent(Content_Container);
-// let withRouter_Content_Container = withRouter(authorizedComponent);
-// export default  connect(mapStateToProps, {getUserProfile})(withRouter_Content_Container);

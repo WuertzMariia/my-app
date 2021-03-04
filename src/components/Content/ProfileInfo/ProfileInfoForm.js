@@ -13,7 +13,10 @@ export const ProfileForm = (props) => {
                 }}
                 initialValues={{
                     userId: props.userId,
-                    lookingForAJob: props.profile.lookingForAJob, aboutMe:props.profile.aboutMe, lookingForAJobDescription: props.profile.lookingForAJobDescription, fullName: props.profile.fullName,
+                    lookingForAJob: props.profile.lookingForAJob,
+                    aboutMe: props.profile.aboutMe,
+                    lookingForAJobDescription: props.profile.lookingForAJobDescription,
+                    fullName: props.profile.fullName,
                     contacts: {
                         github: props.profile.contacts.github,
                         vk: props.profile.contacts.vk,
@@ -40,7 +43,7 @@ export const ProfileForm = (props) => {
                         <div className={s.each_field}>
                             <label>About me</label>
                             <Field name={"aboutMe"} component={"input"} type={"text"}
-                                   />
+                            />
                         </div>
 
                         <div>

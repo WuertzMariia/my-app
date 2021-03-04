@@ -15,8 +15,6 @@ let initialState = {
     },
     isFetching: false,
     login_failed: null
-    // isAuthorized: false
-    // loginId: null
 }
 
 
@@ -65,15 +63,15 @@ export const toggleIsLoadingLogin = (isFetching) => ({type: TOGGLELOGINLOADING, 
 const toggle_failed_login = (login_failed) => ({type: LOGIN_FAILED, login_failed});
 
 export const singInProcessCheck = () => {
-    return async  (dispatch) => {
+    return async (dispatch) => {
         dispatch(toggleIsLoadingLogin(true));
 
         let response = await authAPI.getLoginData()
-            dispatch(toggleIsLoadingLogin(false));
-            if (response.data.resultCode === 0) {
-                let {id, email, login} = response.data.data;
-                dispatch(setAuthUserData(id, email, login, true, false));
-            } else console.log("error no login")
+        dispatch(toggleIsLoadingLogin(false));
+        if (response.data.resultCode === 0) {
+            let {id, email, login} = response.data.data;
+            dispatch(setAuthUserData(id, email, login, true, false));
+        } else console.log("error no login")
     }
 
 };
@@ -84,13 +82,13 @@ export const singInLogin = (values) => {
         if (!values.remember_me) {
             values = {...values, remember_me: false};
         }
-       let response = await loginAPI.signInData(values)
-           if (response.data.resultCode === 0) {
-               // dispatch(setLogin(response.data.userId));
-               dispatch(singInProcessCheck());
-           } else {
-               dispatch(toggle_failed_login(true));
-           }
+        let response = await loginAPI.signInData(values)
+        if (response.data.resultCode === 0) {
+            // dispatch(setLogin(response.data.userId));
+            dispatch(singInProcessCheck());
+        } else {
+            dispatch(toggle_failed_login(true));
+        }
     }
 };
 

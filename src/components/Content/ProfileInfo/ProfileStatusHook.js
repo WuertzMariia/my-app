@@ -35,9 +35,6 @@ const ProfileStatusWithHook = (props) => {
         <div><p><input onChange={updateInputArea} autoFocus="true" onKeyPress={handleKey} onBlur={deactivateEditMode}
         type="text" maxlength="300" value={status}/></p></div>
     }
-
-
-    
     </div>)}
 }
 

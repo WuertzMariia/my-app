@@ -5,8 +5,6 @@ import Sidebar from './components/Sidebar/Sidebar'
 import Music from './components/Music/Music';
 import News from './components/News/News';
 import {BrowserRouter, Route, withRouter} from "react-router-dom";
-// import Dialogs_Container from "./components/Dialogs/Dialogs_Container";
-// import UsersApiComponent from "./components/Users/Users_Container";
 import Content_Container from "./components/Content/Content_Container";
 import Header_Container from "./components/Header/Header_Container";
 import Login from "./components/Login/Login";
